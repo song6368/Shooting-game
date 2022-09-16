@@ -72,6 +72,7 @@ public class Main extends JPanel implements ActionListener {
 	private int itemNum = 0;
 	
 	public Main() {
+		// 새 게임 시작시 전부 초기화해야해서 만든 코드입니다.
 		addKeyListener(new KeyHandler());
 		frame = new JFrame();
 		running = true;
@@ -131,6 +132,7 @@ public class Main extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == newGame) {
+			// 새 게임 버튼 누를 시
 			running = false;
 			frame.dispose();
 			
@@ -146,7 +148,7 @@ public class Main extends JPanel implements ActionListener {
 	}
 	
 	public void initFighter() {
-		try {
+		try { // 내 전투기 만드는 메소드
 			fighter = new FighterSprite(this, fighterImg, 370, 500);
 			sprites1.add(fighter);
 		} catch(Exception e) {
@@ -156,7 +158,7 @@ public class Main extends JPanel implements ActionListener {
 	}
 	
 	public void initSpaceship() {
-		try {
+		try { // 상대 적기 만드는 메소드
 			int n = (int)(Math.random()*500);
 			spaceship = new SpaceshipSprite(this, spaceshipImg, n, 50);
 			sprites2.add(spaceship);
@@ -165,7 +167,7 @@ public class Main extends JPanel implements ActionListener {
 		}
 	}
 	
-	public void threadMove1() {
+	public void threadMove1() { // 나의 비행기 움직일 시 스레드로 동시작업 통해 위치 옮겨서 다시그리기
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -183,7 +185,7 @@ public class Main extends JPanel implements ActionListener {
 		thread.start();
 	}
 	
-	public void threadMove2() {
+	public void threadMove2() { //threadMove2와 비슷. 적기에게 적용
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -201,7 +203,7 @@ public class Main extends JPanel implements ActionListener {
 		thread.start();
 	}
 	
-	public void threadMove3() {
+	public void threadMove3() { // 내 비행기 공격 빔 움직임
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -219,7 +221,7 @@ public class Main extends JPanel implements ActionListener {
 		thread.start();
 	}
 	
-	public void threadMove4() {
+	public void threadMove4() { // 상대 비행기 공격 빔 
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -237,14 +239,14 @@ public class Main extends JPanel implements ActionListener {
 		thread.start();
 	}
 	
-	public void moveAll() {
+	public void moveAll() { // 스레드 묶어뒀습니다.
 		threadMove1();
 		threadMove2();
 		threadMove3();
 		threadMove4();
 	}
 	
-	public boolean checkLife() {
+	public boolean checkLife() { // 라이프 판별
 		if(life == 1) {
 			return true;
 		} else {
@@ -263,9 +265,9 @@ public class Main extends JPanel implements ActionListener {
 	public void gameLoop() {
 		try {
 			
-			while(running) {
+			while(running) { // 당연히 running값이 true일 동안
 				
-				moveAll();
+				moveAll(); // 스레드 움직임
 				
 				for(int p = 0; p < sprites2.size(); p++) {
 					for(int s = 0; s < sprites3.size(); s++) {
@@ -274,7 +276,7 @@ public class Main extends JPanel implements ActionListener {
 							Sprite me = (Sprite) sprites2.get(p);
 							Sprite other = (Sprite) sprites3.get(s);
 							
-							if(me.collision(other)) {
+							if(me.collision(other)) { // 내 빔과 상대 적기 충돌 시 처리
 								me.handleCollision(other);
 								other.handleCollision(me);
 							}
@@ -291,7 +293,7 @@ public class Main extends JPanel implements ActionListener {
 						Sprite me = (Sprite) sprites4.get(s);
 						Sprite other = (Sprite) sprites1.get(0);
 						
-						if(me.collision(other)) {
+						if(me.collision(other)) { // 내 비행기와 상대 빔 충돌 시 처리
 							me.handleCollision(other);
 							other.handleCollision(me);
 						}
@@ -307,7 +309,7 @@ public class Main extends JPanel implements ActionListener {
 						Sprite me = (Sprite) sprites5.get(s);
 						Sprite other = (Sprite) sprites1.get(0);
 						
-						if(me.collision(other)) {
+						if(me.collision(other)) { // 아이템 먹었을 시
 							me.handleCollision(other);
 							other.handleCollision(me);
 						}
@@ -337,7 +339,7 @@ public class Main extends JPanel implements ActionListener {
 		try {
 			if(fireFlag == false) {
 				missile = new MissileSprite(this, missileImg, fighter.getX(), fighter.getY()-20);
-				sprites3.add(missile);
+				sprites3.add(missile); // 미사일 객체 만들어서 arraylist에 저장
 			}
 		} catch(Exception e) {
 			
@@ -349,7 +351,7 @@ public class Main extends JPanel implements ActionListener {
 		sprites3.clear();
 	}
 	
-	public void fire2() {
+	public void fire2() { //적기가 날리는 빔 생성입니다.
 		try {
 			beam = new BeamSprite(this, beamImg, spaceship.getX()+20, spaceship.getY()+15);
 			if(beam == null) {
@@ -369,7 +371,7 @@ public class Main extends JPanel implements ActionListener {
 		if(score % 100 == 0 && score > 0 && fireSpeed > 100) {
 			fireSpeed = fireSpeed - 50;
 			
-			if(life + 3 <= 5) {
+			if(life + 3 <= 5) { // 100점 단위로 보상. 라이프는 3회복 최대 5까지.  속도도 상승
 				life += 3;
 			} else {
 				life = 5;
@@ -645,7 +647,7 @@ public class Main extends JPanel implements ActionListener {
 		}
 	}
 	
-	private void initLockon() {
+	private void initLockon() { // 파란 아이템 먹었으면 사방으로 
 		try {
 			Sprite sprite = (Sprite) sprites1.get(0);
 			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
@@ -842,11 +844,14 @@ public class Main extends JPanel implements ActionListener {
 	public class KeyHandler implements KeyListener{
 
 	    /** 
+	    * 출처: https://micropilot.tistory.com/2953 [Programming:티스토리]
 	    * keyPressed()에서 발생한 키코드를 아래의 HashSet에 저장하면 타이머 이벤트 핸들러에서 
 	    * 키코드를 확인하여 화면을 갱신하는 코드를 실행한다
 	    * 여기서 컬렉션 중에서 Set을 선택한 이유는 키코드가 중복되어 저장하는 것을 막고 키를 뗄 때
 	    * HashSet에서 해당 키코드를 한개만 제거해주면 즉시 이벤트 효과가 제거되므로 이벤트에 즉시 반응하는 효과를 낼 수 있다
 	    */
+		
+	    // 도저히 키 이벤트만으로는 반응속도가 너무 늦어서 항 카페에서 퍼왔습니다.
 	    HashSet<Integer> pressedKeys = new HashSet<Integer>();
 	    Timer timer;
 
@@ -905,7 +910,6 @@ public class Main extends JPanel implements ActionListener {
 	    @Override
 	    public void keyTyped(KeyEvent keyEvent){}
 	}
-	// 출처: https://micropilot.tistory.com/2953 [Programming:티스토리]
 	
 	public static void main(String args[]) {
 		m = new Main();
