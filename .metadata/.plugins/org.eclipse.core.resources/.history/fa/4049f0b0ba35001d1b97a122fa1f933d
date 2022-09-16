@@ -113,11 +113,11 @@ public class Main extends JPanel implements ActionListener {
 			missileImg = ImageIO.read(new File("img/missile.png"));
 			explosionImg = ImageIO.read(new File("img/explosion.png"));
 			spaceshipImg = ImageIO.read(new File("img/spaceship.png"));
-			spaceImg = ImageIO.read(new File("img/space.png"));
+			spaceImg = ImageIO.read(new File("img/space.jpg"));
 			beamImg = ImageIO.read(new File("img/beam.png"));
 			itemImg = ImageIO.read(new File("img/item.png"));
 			itemImg2 = ImageIO.read(new File("img/item2.png"));
-			missileImg2 = ImageIO.read(new File("img/missile2.png"));
+			missileImg = ImageIO.read(new File("img/missile.png"));
 			
 		} catch (Exception e) {
 
@@ -648,77 +648,77 @@ public class Main extends JPanel implements ActionListener {
 	private void initLockon() {
 		try {
 			Sprite sprite = (Sprite) sprites1.get(0);
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(10);
 			missile.setDy(10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(5);
 			missile.setDy(10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(10);
 			missile.setDy(5);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-5);
 			missile.setDy(10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(10);
 			missile.setDy(-5);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-10);
 			missile.setDy(5);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-5);
 			missile.setDy(-10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(5);
 			missile.setDy(-10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-10);
 			missile.setDy(-5);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(10);
 			missile.setDy(-10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-10);
 			missile.setDy(-10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-10);
 			missile.setDy(10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(-10);
 			missile.setDy(0);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(0);
 			missile.setDy(-10);
 			sprites3.add(missile);
 			
-			missile = new MissileSprite(this, missileImg2, sprite.getX(), sprite.getY(), 0);
+			missile = new MissileSprite(this, missileImg, sprite.getX(), sprite.getY(), 0);
 			missile.setDx(10);
 			missile.setDy(0);
 			sprites3.add(missile);
