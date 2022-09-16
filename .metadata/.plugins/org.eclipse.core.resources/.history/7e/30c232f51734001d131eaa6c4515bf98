@@ -1,0 +1,41 @@
+package Main;
+
+import java.awt.Image;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class SpaceshipSprite extends Sprite{
+	private Main m;
+	
+	public SpaceshipSprite(Main m, Image image, int x, int y) {
+		super(image, x, y);
+		this.m = m;
+		dy = 5;
+	}
+
+	public void move() {
+		super.move();
+		if(y > 800) {
+			m.removeSprite(this);
+		}
+	}
+	
+	TimerTask task = new TimerTask() {
+	    public void run() {
+	        System.out.println(new Date() + " : Executing the task from "
+	                + Thread.currentThread().getName());
+	    }
+	};
+
+	Timer timer = new Timer("Timer");
+	long delay = 3000L;
+	System.out.println(new Date() + " : Scheduling....");
+	timer.schedule(task, delay);
+	
+	public void handleCollision(Sprite other) {
+		if(other instanceof MissileSprite) {
+			m.removeSprite(this);
+			m.initItem(this);
+		}
+	}
+}

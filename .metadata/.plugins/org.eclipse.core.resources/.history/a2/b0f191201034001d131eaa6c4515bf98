@@ -1,0 +1,61 @@
+package Main;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.HashSet;
+
+import javax.swing.Timer;
+import javax.swing.text.html.HTMLDocument.Iterator;
+
+public class KeyHandler implements KeyListener{
+
+    /** 
+    * keyPressed()에서 발생한 키코드를 아래의 HashSet에 저장하면 타이머 이벤트 핸들러에서 
+    * 키코드를 확인하여 화면을 갱신하는 코드를 실행한다
+    * 여기서 컬렉션 중에서 Set을 선택한 이유는 키코드가 중복되어 저장하는 것을 막고 키를 뗄 때
+    * HashSet에서 해당 키코드를 한개만 제거해주면 즉시 이벤트 효과가 제거되므로 이벤트에 즉시 반응하는 효과를 낼 수 있다
+    */
+    HashSet<Integer> pressedKeys = new HashSet<Integer>();
+    Timer timer;
+
+    public KeyHandler()
+    {
+        timer = new Timer(50, new ActionListener(){ // 50ms마다 액션 이벤트 발생
+            @Override
+            public void actionPerformed(ActionEvent arg0) // 50ms마다 발생한 액션 이벤트 처리
+            {	
+                if(!pressedKeys.isEmpty()){
+                    Iterator<Integer> i = pressedKeys.iterator();
+                    int n = 0;
+                    while(i.hasNext()){
+                    	n = i.next();
+                    	if	(n==KeyEvent.VK_A) 	deg--;
+                    	else if	(n==KeyEvent.VK_D) 	deg++;
+                    	repaint();
+                    }
+                }else {
+                	timer.stop();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void keyPressed(KeyEvent keyEvent){
+        //발생한 키코드를 HsshSet에 저장한다
+        int keyCode = keyEvent.getKeyCode();
+        pressedKeys.add(keyCode);
+        if(!timer.isRunning()) timer.start();
+    }
+    @Override
+    public void keyReleased(KeyEvent keyEvent){
+        //HashSet에서 키코드를 제거한다
+        int keyCode = keyEvent.getKeyCode();
+        pressedKeys.remove(keyCode);
+    }
+    @Override
+    public void keyTyped(KeyEvent keyEvent){}
+}
+출처: https://micropilot.tistory.com/2953 [Programming:티스토리]

@@ -1,0 +1,38 @@
+package Main;
+
+import java.awt.Image;
+
+import Main.Main;
+
+public class MissileSprite extends Sprite {
+	
+	Main m;
+	
+	
+	public MissileSprite(Main m, Image image, int x, int y) {
+		super(image, x, y);
+		dy = -15;
+		this.m = m;
+	}
+	
+	public MissileSprite(Main m, Image image, int x, int y, int rl) {
+		super(image, x, y);
+		dy = -15;
+		this.m = m;
+	}
+	
+	public void move() {
+		super.move();
+		if(y < -100) {
+			m.removeSprite(this);
+		}
+	}
+	
+	@Override 
+	public void handleCollision(Sprite other) {
+		if(other instanceof SpaceshipSprite) {
+			m.plusScore();
+			m.removeSprite(this);
+		} 
+	}
+}

@@ -1,0 +1,412 @@
+package Main;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+public class Main extends JPanel implements KeyListener {
+
+	private boolean running = true;
+	
+	private BufferedImage fighterImg;
+	private BufferedImage missileImg;
+	private BufferedImage explosionImg;
+	private BufferedImage spaceshipImg;
+	private BufferedImage spaceImg;
+	private BufferedImage beamImg;
+	private int score = 0;
+	
+	public static ArrayList sprites1 = new ArrayList(); // fighter
+	public static ArrayList sprites2 = new ArrayList(); // spaceship
+	public static ArrayList sprites3 = new ArrayList(); // missile
+	public static ArrayList sprites4 = new ArrayList(); // beam
+	public Sprite fighter;
+	public Sprite missile;
+	public Sprite spaceship;
+	public Sprite beam;
+	
+	public Main() {
+		JFrame frame = new JFrame("Shoot");
+		frame.setSize(700, 800);// 창 크기 설정
+		frame.setLayout(null);
+		
+		this.setBounds(0,0,700,800);
+		
+		frame.add(this);
+		frame.setResizable(false);
+		frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		try {
+
+			// 이미지 불러오기
+			fighterImg = ImageIO.read(new File("img/fighter.png"));
+			missileImg = ImageIO.read(new File("img/missile.png"));
+			explosionImg = ImageIO.read(new File("img/explosion.png"));
+			spaceshipImg = ImageIO.read(new File("img/spaceship.png"));
+			spaceImg = ImageIO.read(new File("img/space.jpg"));
+			beamImg = ImageIO.read(new File("img/beam.png"));
+			
+		} catch (Exception e) {
+
+		}
+		
+		this.requestFocus();
+		this.initFighter();
+		addKeyListener(this);
+	}
+	
+	public void initFighter() {
+		fighter = new FighterSprite(this, fighterImg, 370, 500);
+		sprites1.add(fighter);
+	}
+	
+	public void initSpaceship() {
+		int n = (int)(Math.random()*500);
+		spaceship = new SpaceshipSprite(this, spaceshipImg, n, 10);
+		sprites2.add(spaceship);
+	}
+	
+	public void threadMove1() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i = 0; i < sprites1.size(); i++) {
+					try {
+						Sprite sprite = (Sprite) sprites1.get(i);
+						sprite.move();
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+		});
+		
+		thread.start();
+	}
+	
+	public void threadMove2() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i = 0; i < sprites2.size(); i++) {
+					try {
+						Sprite sprite = (Sprite) sprites2.get(i);
+						sprite.move();
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+		});
+		
+		thread.start();
+	}
+	
+	public void threadMove3() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i = 0; i < sprites3.size(); i++) {
+					try {
+						Sprite sprite = (Sprite) sprites3.get(i);
+						sprite.move();
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+		});
+		
+		thread.start();
+	}
+	
+	public void threadMove4() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				for(int i = 0; i < sprites4.size(); i++) {
+					try {
+						Sprite sprite = (Sprite) sprites4.get(i);
+						sprite.move();
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+		});
+		
+		thread.start();
+	}
+	
+	public void moveAll() {
+		threadMove1();
+		threadMove2();
+		threadMove3();
+		threadMove4();
+	}
+	
+	public void gameLoop() {
+		
+		while(running) {
+			
+			// 이동
+			moveAll();
+			
+			for(int p = 0; p < sprites2.size(); p++) {
+				for(int s = 0; s < sprites3.size(); s++) {
+					
+					try {
+						Sprite me = (Sprite) sprites2.get(p);
+						Sprite other = (Sprite) sprites3.get(s);
+						
+						if(me.collision(other)) {
+							me.handleCollision(other);
+							other.handleCollision(me);
+						}
+						
+					} catch(Exception e) {
+						
+					}
+				}
+			}
+			
+			repaint();
+			
+			try {
+				Thread.sleep(10);
+			} catch (Exception e) {
+				
+			}
+		}
+	}
+	
+	public void fire() {
+		missile = new MissileSprite(this, missileImg, fighter.getX(), fighter.getY()-20);
+		sprites3.add(missile);
+	}
+	
+	public void fire2() {
+		beam = new BeamSprite(this, beamImg, spaceship.getX()+20, spaceship.getY()+15);
+		sprites4.add(beam);
+	}
+	
+	public void plusScore() {
+		score+=10;
+	}
+	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		
+		g.drawImage(spaceImg, 0, 0, null);
+		g.setFont(new Font("궁서", Font.BOLD, 20));
+		g.setColor(Color.white);
+		g.drawString("점수 : "+score, 500, 50);
+		
+		paintFighter(g);
+		paintMissile(g);
+		paintSpaceship(g);
+		paintBeam(g);
+	}
+	
+	public void paintFighter(Graphics g) {
+		try {
+			Sprite sprite = (Sprite) sprites1.get(0);
+			sprite.draw(g);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void paintMissile(Graphics g) {
+		try {
+			for(int i = 0; i < sprites3.size(); i++) {
+				Sprite sprite = (Sprite) sprites3.get(i);
+				sprite.draw(g);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void paintSpaceship(Graphics g) {
+		try {
+			for(int i = 0; i < sprites2.size(); i++) {
+				Sprite sprite = (Sprite) sprites2.get(i);
+				sprite.draw(g);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void paintBeam(Graphics g) {
+		try {
+			for(int i = 0; i < sprites4.size(); i++) {
+				Sprite sprite = (Sprite) sprites4.get(i);
+				sprite.draw(g);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 혹시 몰라 이미지 조절 메소드 만들어둠.
+	public static void resizeFile(String imagePathToRead, String imagePathToWrite, int resizeWidth, int resizeHeight) throws IOException {
+
+		File fileToRead = new File(imagePathToRead);
+		
+		BufferedImage bufferedImageInput = ImageIO.read(fileToRead);
+
+		BufferedImage bufferedImageOutput = new BufferedImage(resizeWidth, resizeHeight, bufferedImageInput.getType());
+
+		Graphics2D g2d = bufferedImageOutput.createGraphics();
+		g2d.drawImage(bufferedImageInput, 0, 0, resizeWidth, resizeHeight, null);
+		g2d.dispose();
+
+		String formatName = imagePathToWrite.substring(imagePathToWrite.lastIndexOf(".") + 1);
+
+		ImageIO.write(bufferedImageOutput, formatName, new File(imagePathToWrite));
+	}
+
+	public void removeSprite(Sprite sprite) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				
+				if(sprite instanceof MissileSprite) {
+					sprites3.remove(sprite);
+				}
+				
+				if(sprite instanceof MissileSprite) {
+					sprites3.remove(sprite);
+				}
+				
+				if(sprite instanceof SpaceshipSprite) {
+					sprite.image = explosionImg;
+				}
+					
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				if(sprite instanceof SpaceshipSprite) {
+					sprites2.remove(sprite);
+				}
+				
+			}
+		});
+		
+		thread.start();
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_LEFT)
+			fighter.setDx(-5);
+		else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+			fighter.setDx(+5);
+		else if(e.getKeyCode() == KeyEvent.VK_UP)
+			fighter.setDy(-5);
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+			fighter.setDy(+5);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getKeyCode() == KeyEvent.VK_LEFT)
+			fighter.setDx(0);
+		else if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+			fighter.setDx(0);
+		else if(e.getKeyCode() == KeyEvent.VK_UP)
+			fighter.setDy(0);
+		else if(e.getKeyCode() == KeyEvent.VK_DOWN)
+			fighter.setDy(0);
+	}
+	
+	public void threadFire() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					fire();
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}	
+		});
+			
+		thread.start();
+	}
+	
+	public void threadFire2() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					fire2();
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}	
+		});
+			
+		thread.start();
+	}
+	
+	public void threadInitSpaceship() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(true) {
+					
+					initSpaceship();
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}	
+		});
+		
+		thread.start();
+	}
+	
+	public static void main(String args[]) {
+		Main m = new Main();
+		m.threadFire();
+		m.threadInitSpaceship();
+		m.threadFire2();
+		m.gameLoop();
+	}
+}

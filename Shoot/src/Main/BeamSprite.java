@@ -1,0 +1,28 @@
+package Main;
+
+import java.awt.Image;
+
+public class BeamSprite extends Sprite {
+	
+	Main m;
+	
+	public BeamSprite(Main m, Image image, int x, int y) {
+		super(image, x, y);
+		dy = 10;
+		this.m = m;
+	}
+	
+	public void move() {
+		super.move();
+		if(y > 800) {
+			m.removeSprite(this);
+		}
+	}
+	
+	@Override 
+	public void handleCollision(Sprite other) {
+		if(other instanceof FighterSprite) {
+			m.removeSprite(this);
+		}
+	}
+}

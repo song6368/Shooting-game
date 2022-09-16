@@ -1,0 +1,51 @@
+package Main;
+
+import java.awt.Image;
+
+public class itemSprite extends Sprite {
+
+	Main m;
+	
+	int num;
+	
+	int type = 0;
+	
+	public itemSprite(Main m, Image image, int x, int y, int num) {
+		super(image, x, y);
+		this.m = m;
+		this.num = num;
+		this.type = 0;
+	}
+	
+	public itemSprite(Main m, Image image, int x, int y, int num, int type) {
+		super(image, x, y);
+		this.m = m;
+		this.num = num;
+		this.type = type;
+	}
+	
+	public int getItemNum() {
+		return num;
+	}
+	
+	public int getItemType() {
+		return type;
+	}
+	
+	@Override 
+	public void handleCollision(Sprite other) {
+		if(other instanceof FighterSprite) {
+			
+			if(this.type == 0)
+				m.upgradeMissile();
+			
+			if(this.type == 1)
+				System.out.println("upgrade 2!!!");
+				m.upgradeMissile2();
+			
+			m.removeSprite(this);
+		
+		}
+	}
+
+}
